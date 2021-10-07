@@ -1,0 +1,91 @@
+scalar Date
+
+type Query {
+  accounts: [ Account! ]!
+  categories(operation: Operation): [ Category! ]!
+  records(
+    month: String,
+    type: Operation,
+    accountsIds: [ID!],
+    categoriesIds: [ID!]
+  ): [ Record! ]!
+  user: User
+  totalBalance(date: Date!): Float!
+}
+
+type Mutation {
+  createAccount(description: String!): Account!
+  createCategory(description: String!, operation: Operation!): Category!
+  createRecord(
+    accountId: ID!
+    categoryId: ID!
+    amount: Float!
+    type: Operation!
+    date: Date!
+    description: String!
+    tags: String
+    note: String
+
+  ): Record!
+  
+  editRecord(
+    description: String!
+    amount: Float!
+    date: Date!
+    accountId: ID!
+    categoryId: ID!
+    type: Operation!
+    tags: String
+    note: String
+
+    id: ID!
+
+  ): Record!
+
+  deleteRecord(id: ID!): Record!
+  login(email: String!, password: String!): AuthPayload
+  signup(email: String!, password: String!, name: String!): AuthPayload
+}
+
+type AuthPayload {
+  token: String!
+  user: User!
+
+}
+
+type User {
+  id: ID!
+  name: String!
+  email: String!
+}
+
+type Account {
+  id: ID!
+  user: User
+  description: String!
+}
+
+enum Operation{
+  DEBIT
+  CREDIT
+}
+
+type Category {
+  id: ID!
+  user: User
+  description: String!
+  operation: Operation!
+}
+
+type Record {  
+  id: ID!
+  user: User!
+  account: Account!
+  category: Category!
+  amount: Float!
+  type: Operation!
+  date: Date!
+  description: String!
+  tags: String
+  note: String
+}
